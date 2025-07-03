@@ -81,11 +81,6 @@ local Main = Window:Tab({
     Icon = "align-justify",
     Locked = false,
 })
-local Player = Window:Tab({
-    Title = "Player",
-    Icon = "user",
-    Locked = false,
-})
 local Utilities = Window:Tab({
     Title = "Utilities",
     Icon = "brush-cleaning",
@@ -581,80 +576,7 @@ local teleporttoplayerButton = Main:Button({
             print("No player selected!")
         end
     end
-})
-
-local startTime = tick()
-local timeParagraph -- declared so we can update it later
-
-local function getTimePlayed()
-    local total = tick() - startTime
-    local minutes = math.floor(total / 60)
-    local seconds = math.floor(total % 60)
-    return string.format("%02d:%02d", minutes, seconds)
-end
-
--- Function to recreate the paragraph with updated time
-local function updateTimeParagraph()
-    if timeParagraph then
-        timeParagraph:Remove()
-    end
-
-    timeParagraph = Player:Paragraph({
-        Title = "⏱️ Time in Game",
-        Desc = "You have been playing for " .. getTimePlayed() .. ".",
-        Color = "Blue",
-        Image = "",
-        ImageSize = 30,
-        Thumbnail = "",
-        ThumbnailSize = 80,
-        Locked = false,
-        Buttons = {
-            {
-                Icon = "clock",
-                Title = "Reset Timer",
-                Callback = function()
-                    startTime = tick()
-                    print("Timer reset!")
-                end,
-            }
-        }
-    })
-end
-
--- Loop that refreshes the paragraph every second
-task.spawn(function()
-    while true do
-        updateTimeParagraph()
-        task.wait(1)
-    end
-end)
-
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local username = LocalPlayer.Name
-local accountAgeDays = LocalPlayer.AccountAge
-
-local userInfoParagraph = Player:Paragraph({
-    Title = "👤 Player Info",
-    Desc = "Username: " .. username .. "\nAccount Age: " .. accountAgeDays .. " days old",
-    Color = "Blue",
-    Image = "", -- you can add a profile icon image ID here
-    ImageSize = 30,
-    Thumbnail = "", -- optional avatar thumbnail
-    ThumbnailSize = 80,
-    Locked = false,
-    Buttons = {
-        {
-            Icon = "user",
-            Title = "Copy Username",
-            Callback = function()
-                setclipboard(username)
-                print("Username copied!")
-            end,
-        }
-    }
-})
+})                
 
 local gamesParagraph = Games:Paragraph({
     Title = "🎮 Games Supported",
