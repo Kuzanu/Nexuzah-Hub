@@ -529,78 +529,76 @@ local idk4Section = Main:Section({
     TextSize = 17, -- Default Size
 }) 
 
-local selectedPlayer = nil
-local teleportEnabled = false
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
--- Create Dropdown with empty list initially
-local Dropdown = Main:Dropdown({
-    Title = "Choose Player",
-    Values = {},  -- will update dynamically
-    Value = "Choose a player...",
-    Callback = function(option)
-        selectedPlayer = option
-        print("Selected player: " .. option)
-    end
-})
-
--- Create Toggle for teleport
-local Toggle = Main:Toggle({
-    Title = "Teleport to Player",
-    Desc = "Teleport instantly to selected player",
-    Default = false,
-    Callback = function(state)
-        teleportEnabled = state
-        if teleportEnabled and selectedPlayer then
-            local target = game.Players:FindFirstChild(selectedPlayer)
-            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0,5,0)
-                print("Teleported to "..selectedPlayer)
-            else
-                warn("Player not found or invalid")
-            end
-        elseif teleportEnabled and not selectedPlayer then
-            warn("No player selected")
-        end
-    end
-})
-
--- Update dropdown list function
-local function updatePlayerList()
+-- Make sure the player list updates dynamically
+local function getPlayerNames()
     local names = {}
-    for _, p in pairs(game.Players:GetPlayers()) do
-        if p ~= game.Players.LocalPlayer then
-            table.insert(names, p.Name)
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then -- avoid teleporting to yourself
+            table.insert(names, player.Name)
         end
     end
-    Dropdown:SetValues(names)
+    return names
 end
 
--- Update the dropdown whenever players join or leave
-game.Players.PlayerAdded:Connect(updatePlayerList)
-game.Players.PlayerRemoving:Connect(updatePlayerList)
-updatePlayerList()
+local selectedPlayer = nil
 
-local TeleportGambleButton = Main:Button({
-    Title = "Teleport Gamble 🎲",
-    Desc = "Teleports you to a random player in the server.",
+local selectplayerDropdown = Main:Dropdown({
+    Title = "Select Player",
+    Values = getPlayerNames(),
+    Value = "",
+    Callback = function(option)
+        selectedPlayer = option
+        print("Selected player:", selectedPlayer)
+    end
+})
+
+-- Optional: Refresh dropdown when players join/leave
+Players.PlayerAdded:Connect(function()
+    selectplayerDropdown:SetValues(getPlayerNames())
+end)
+
+Players.PlayerRemoving:Connect(function()
+    selectplayerDropdown:SetValues(getPlayerNames())
+end)
+
+local teleporttoplayerButton = Main:Button({
+    Title = "Teleport to Player",
+    Desc = "Teleports you to the selected player.",
     Locked = false,
     Callback = function()
-        local players = {}
-        for _, plr in pairs(game.Players:GetPlayers()) do
-            if plr ~= game.Players.LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-                table.insert(players, plr)
+        if selectedPlayer then
+            local target = Players:FindFirstChild(selectedPlayer)
+            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character:MoveTo(target.Character.HumanoidRootPart.Position)
+                print("Teleported to " .. selectedPlayer)
+            else
+                print("Target player not found or not loaded.")
             end
+        else
+            print("No player selected!")
         end
-
-        if #players == 0 then
-            warn("No valid players to teleport to.")
-            return
-        end
-
-        local chosen = players[math.random(1, #players)]
-        local hrp = chosen.Character.HumanoidRootPart
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
-
-        print("🎲 Teleported to: " .. chosen.Name)
     end
+})
+
+local creditsParagraph = Credits:Paragraph({
+    Title = "👑 Credits to Kuzanu",
+    Desc = "UI Designer and Absolute Legend behind the visuals of this hub. Salute to the GOAT. 🐐 Also for making this script possible!",
+    Color = "Cyan", -- You can change this to any supported color name
+    Image = "rbxassetid://12187607287", -- Optional: replace with a real asset ID if you have one
+    ImageSize = 30,
+    Thumbnail = "rbxthumb://type=AvatarHeadShot&id=KuzanuUserId&w=420&h=420", -- Replace KuzanuUserId with the actual user ID
+    ThumbnailSize = 80,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "heart", -- Choose from available icons in your UI lib
+            Title = "Say Thanks",
+            Callback = function()
+                print("Shoutout to Kuzanu for the clean UI! ❤️")
+            end,
+        }
+    }
 })
