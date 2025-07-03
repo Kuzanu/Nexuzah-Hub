@@ -586,10 +586,10 @@ local teleporttoplayerButton = Main:Button({
 local creditsParagraph = Credits:Paragraph({
     Title = "👑 Credits to Kuzanu",
     Desc = "UI Designer and Absolute Legend behind the visuals of this hub. Salute to the GOAT. 🐐 Also for making this script possible!",
-    Color = "Cyan", -- You can change this to any supported color name
-    Image = "rbxassetid://12187607287", -- Optional: replace with a real asset ID if you have one
+    Color = "Blue", -- You can change this to any supported color name
+    Image = "", -- Optional: replace with a real asset ID if you have one
     ImageSize = 30,
-    Thumbnail = "rbxthumb://type=AvatarHeadShot&id=KuzanuUserId&w=420&h=420", -- Replace KuzanuUserId with the actual user ID
+    Thumbnail = "", -- Replace KuzanuUserId with the actual user ID
     ThumbnailSize = 80,
     Locked = false,
     Buttons = {
