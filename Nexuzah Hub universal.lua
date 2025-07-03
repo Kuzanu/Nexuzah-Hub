@@ -18,7 +18,7 @@ WindUI:AddTheme({
 local Window = WindUI:CreateWindow({
     Title = "Nexuzah Hub | Universal",
     Icon = "terminal",
-    Author = "by Kuzanu",
+    Author = "Version: 6.3.5 | by Kuzanu",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(480, 360),
     Transparent = true,
@@ -36,6 +36,9 @@ local Window = WindUI:CreateWindow({
         end,
     },
 })
+
+--                        | Special name     | Icon     | Callback                         | Order
+Window:CreateTopbarButton("Discord Link", "clipboard",    function() setclipboard("https://discord.gg/G6q7FJCyc8") end,  990)
 
 Window:EditOpenButton({
     Title = "Nexuzah Hub",
@@ -65,7 +68,7 @@ local Dialog = Window:Dialog({
         {
             Title = "Copy Discord Invite",
             Callback = function()
-                setclipboard("https://discord.gg/YOURINVITEHERE")
+                setclipboard("https://discord.gg/G6q7FJCyc8")
             end,
         },
     },
@@ -104,6 +107,22 @@ local Credits = Window:Tab({
 
 Window:SelectTab(1) -- Number of Tab
 
+local idkwtfSection = Home:Section({ 
+    Title = "Discord Invite",
+    TextXAlignment = "Left",
+    TextSize = 17, -- Default Size
+})
+
+local DiscordButton = Home:Button({
+    Title = "Join Our Discord",
+    Desc = "Copies the Discord invite to your clipboard.",
+    Locked = false,
+    Callback = function()
+        setclipboard("https://discord.gg/G6q7FJCyc8")
+        print("Copied Discord invite to clipboard!")
+    end
+})
+
 local idkSection = Home:Section({ 
     Title = "Local Player Configurations",
     TextXAlignment = "Left",
@@ -127,7 +146,7 @@ local WalkSpeedSlider = Home:Slider({
     
     Value = {
         Min = 16,
-        Max = 500,
+        Max = 999,
         Default = 16,
     },
     
@@ -579,7 +598,7 @@ local teleporttoplayerButton = Main:Button({
 })
 
 local Section = Utilities:Section({ 
-    Title = "🧰 Utility Tools",
+    Title = "Utility Tools",
     TextXAlignment = "Left",
     TextSize = 17,
 })
@@ -647,7 +666,7 @@ local ClearLag = Utilities:Button({
 })
 
 local gamesParagraph = Games:Paragraph({
-    Title = "🎮 Games Supported",
+    Title = "Games Supported",
     Desc = [[
 - Dead Rails
 - Muscle Legends
@@ -691,7 +710,7 @@ local Section = SettingsTab:Section({
 })
 
 local lolParagraph = SettingsTab:Paragraph({
-    Title = "📊 FPS Monitor",
+    Title = "FPS Monitor",
     Desc = "Current FPS: Calculating...",
     Color = "Blue",
     Image = "",
