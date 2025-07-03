@@ -583,6 +583,45 @@ local teleporttoplayerButton = Main:Button({
     end
 })
 
+local startTime = tick()
+
+local function getTimePlayed()
+    local total = tick() - startTime
+    local minutes = math.floor(total / 60)
+    local seconds = math.floor(total % 60)
+    return string.format("%02d:%02d", minutes, seconds)
+end
+
+local timeParagraph = Player:Paragraph({
+    Title = "⏱️ Time in Game",
+    Desc = "You have been playing for 00:00.",
+    Color = "Blue",
+    Locked = false,
+    Buttons = {}
+})
+
+-- Optional: auto update every second
+task.spawn(function()
+    while true do
+        timeParagraph:SetDesc("You have been playing for " .. getTimePlayed() .. ".")
+        task.wait(1)
+    end
+end)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local username = LocalPlayer.Name
+local accountAgeDays = LocalPlayer.AccountAge
+
+local userInfoParagraph = Player:Paragraph({
+    Title = "👤 Player Info",
+    Desc = "Username: " .. username .. "\nAccount Age: " .. accountAgeDays .. " days old",
+    Color = "Blue",
+    Locked = false,
+    Buttons = {}
+})
+
 local gamesParagraph = Games:Paragraph({
     Title = "🎮 Games Supported",
     Desc = [[
