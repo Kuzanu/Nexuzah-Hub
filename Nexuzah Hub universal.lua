@@ -596,9 +596,9 @@ local timeParagraph = Player:Paragraph({
     Title = "⏱️ Time in Game",
     Desc = "You have been playing for 00:00.",
     Color = "Blue",
-    Image = "", -- you can add a clock icon image ID here
+    Image = "",
     ImageSize = 30,
-    Thumbnail = "", -- optional thumbnail
+    Thumbnail = "",
     ThumbnailSize = 80,
     Locked = false,
     Buttons = {
@@ -607,18 +607,18 @@ local timeParagraph = Player:Paragraph({
             Title = "Reset Timer",
             Callback = function()
                 startTime = tick()
-                print("Timer reset!")
             end,
         }
     }
 })
 
--- Auto-update timer every second
-task.spawn(function()
-    while true do
-        timeParagraph:SetDesc("You have been playing for " .. getTimePlayed() .. ".")
-        task.wait(1)
-    end
+task.delay(0.1, function()
+    task.spawn(function()
+        while true do
+            timeParagraph:SetDesc("You have been playing for " .. getTimePlayed() .. ".")
+            task.wait(1)
+        end
+    end)
 end)
 
 local Players = game:GetService("Players")
