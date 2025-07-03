@@ -91,7 +91,7 @@ local Games = Window:Tab({
     Icon = "gamepad-2",
     Locked = false,
 })
-local Settings = Window:Tab({
+local SettingsTab = Window:Tab({
     Title = "Settings",
     Icon = "settings",
     Locked = false,
@@ -603,6 +603,68 @@ local gamesParagraph = Games:Paragraph({
             end,
         }
     }
+})
+
+local Section = SettingsTab:Section({ 
+    Title = "Security",
+    TextXAlignment = "Left",
+    TextSize = 17,
+})
+
+local Toggle1 = SettingsTab:Toggle({
+    Title = "Anti-AFK",
+    Desc = "Prevents Roblox from kicking you for being idle.",
+    Icon = "moon",
+    Type = "Checkbox",
+    Default = true,
+    Callback = function(state)
+        getgenv().AntiAFK = state
+        if state then
+            local vu = game:GetService("VirtualUser")
+            game:GetService("Players").LocalPlayer.Idled:Connect(function()
+                vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                task.wait(1)
+                vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+            end)
+        end
+    end,
+})
+
+local Toggle2 = SettingsTab:Toggle({
+    Title = "Server Hop on Mod Detection",
+    Desc = "Automatically hops to another server if a moderator is detected.",
+    Icon = "server",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        getgenv().ServerHopMod = state
+        -- Placeholder: add your moderator detection logic
+    end,
+})
+
+local Toggle3 = SettingsTab:Toggle({
+    Title = "Enable Webhook Logging",
+    Desc = "Sends logs to your Discord webhook.",
+    Icon = "link",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        getgenv().WebhookLogging = state
+        -- Add webhook logging code here
+    end,
+})
+
+local Toggle4 = SettingsTab:Toggle({
+    Title = "Auto Kick on Suspicious Activity",
+    Desc = "Automatically kicks the player if suspicious activity is detected in the game.",
+    Icon = "shield",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoKick = state
+        -- Example: if suspicious, kick the player
+        -- if state then game.Players.LocalPlayer:Kick("Suspicious activity detected.") end
+    end,
 })
 
 local creditsParagraph = Credits:Paragraph({
