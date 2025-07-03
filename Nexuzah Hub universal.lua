@@ -596,11 +596,24 @@ local timeParagraph = Player:Paragraph({
     Title = "⏱️ Time in Game",
     Desc = "You have been playing for 00:00.",
     Color = "Blue",
+    Image = "", -- you can add a clock icon image ID here
+    ImageSize = 30,
+    Thumbnail = "", -- optional thumbnail
+    ThumbnailSize = 80,
     Locked = false,
-    Buttons = {}
+    Buttons = {
+        {
+            Icon = "clock",
+            Title = "Reset Timer",
+            Callback = function()
+                startTime = tick()
+                print("Timer reset!")
+            end,
+        }
+    }
 })
 
--- Optional: auto update every second
+-- Auto-update timer every second
 task.spawn(function()
     while true do
         timeParagraph:SetDesc("You have been playing for " .. getTimePlayed() .. ".")
@@ -618,8 +631,21 @@ local userInfoParagraph = Player:Paragraph({
     Title = "👤 Player Info",
     Desc = "Username: " .. username .. "\nAccount Age: " .. accountAgeDays .. " days old",
     Color = "Blue",
+    Image = "", -- you can add a profile icon image ID here
+    ImageSize = 30,
+    Thumbnail = "", -- optional avatar thumbnail
+    ThumbnailSize = 80,
     Locked = false,
-    Buttons = {}
+    Buttons = {
+        {
+            Icon = "user",
+            Title = "Copy Username",
+            Callback = function()
+                setclipboard(username)
+                print("Username copied!")
+            end,
+        }
+    }
 })
 
 local gamesParagraph = Games:Paragraph({
