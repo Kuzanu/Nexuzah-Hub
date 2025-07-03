@@ -532,55 +532,53 @@ local idk4Section = Main:Section({
 local selectedPlayer = nil
 local teleportEnabled = false
 
--- 🧍 Dropdown for players
+-- Create Dropdown with empty list initially
 local Dropdown = Main:Dropdown({
     Title = "Choose Player",
-    Values = {}, -- will fill this dynamically
+    Values = {},  -- will update dynamically
     Value = "Choose a player...",
-    Callback = function(option) 
+    Callback = function(option)
         selectedPlayer = option
-        print("Selected: " .. option)
+        print("Selected player: " .. option)
     end
 })
 
--- 🔁 Update dropdown list
+-- Create Toggle for teleport
+local Toggle = Main:Toggle({
+    Title = "Teleport to Player",
+    Desc = "Teleport instantly to selected player",
+    Default = false,
+    Callback = function(state)
+        teleportEnabled = state
+        if teleportEnabled and selectedPlayer then
+            local target = game.Players:FindFirstChild(selectedPlayer)
+            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0,5,0)
+                print("Teleported to "..selectedPlayer)
+            else
+                warn("Player not found or invalid")
+            end
+        elseif teleportEnabled and not selectedPlayer then
+            warn("No player selected")
+        end
+    end
+})
+
+-- Update dropdown list function
 local function updatePlayerList()
     local names = {}
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer then
-            table.insert(names, player.Name)
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p ~= game.Players.LocalPlayer then
+            table.insert(names, p.Name)
         end
     end
     Dropdown:SetValues(names)
 end
 
--- Update when players join/leave
+-- Update the dropdown whenever players join or leave
 game.Players.PlayerAdded:Connect(updatePlayerList)
 game.Players.PlayerRemoving:Connect(updatePlayerList)
 updatePlayerList()
-
--- 🧲 Teleport toggle
-local TeleporttopersonToggle = Main:Toggle({
-    Title = "Teleport to Player",
-    Desc = "Teleports to selected player when toggled on.",
-    Icon = "",
-    Type = "Toggle",
-    Default = false,
-    Callback = function(state) 
-        teleportEnabled = state
-        if state and selectedPlayer then
-            local target = game.Players:FindFirstChild(selectedPlayer)
-            if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
-                print("Teleported to " .. selectedPlayer)
-            else
-                warn("Player not found or invalid")
-            end
-        elseif state and not selectedPlayer then
-            warn("No player selected!")
-        end
-    end
-})
 
 local TeleportGambleButton = Main:Button({
     Title = "Teleport Gamble 🎲",
