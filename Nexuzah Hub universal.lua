@@ -673,6 +673,56 @@ local gamesParagraph = Games:Paragraph({
     }
 })
 
+local fpsValue = 0
+
+-- FPS Updater
+task.spawn(function()
+    while true do
+        local lastTick = tick()
+        task.wait(1)
+        fpsValue = math.floor(1 / (tick() - lastTick))
+    end
+end)
+
+local Section = SettingsTab:Section({ 
+    Title = "FPS",
+    TextXAlignment = "Left",
+    TextSize = 17,
+})
+
+local lolParagraph = SettingsTab:Paragraph({
+    Title = "📊 FPS Monitor",
+    Desc = "Current FPS: Calculating...",
+    Color = "Blue",
+    Image = "",
+    ImageSize = 30,
+    Thumbnail = "",
+    ThumbnailSize = 80,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "zap",
+            Title = "Uncap FPS",
+            Callback = function()
+                if setfpscap then
+                    setfpscap(999)
+                    print("FPS Uncapped")
+                else
+                    warn("FPS unlock not supported on this executor.")
+                end
+            end,
+        }
+    }
+})
+
+-- Auto-update FPS value every second
+task.spawn(function()
+    while true do
+        Paragraph:SetDesc("Current FPS: " .. tostring(fpsValue))
+        task.wait(1)
+    end
+end)
+
 local Section = SettingsTab:Section({ 
     Title = "Security",
     TextXAlignment = "Left",
