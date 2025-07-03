@@ -584,6 +584,7 @@ local teleporttoplayerButton = Main:Button({
 })
 
 local startTime = tick()
+local timeParagraph -- declared so we can update it later
 
 local function getTimePlayed()
     local total = tick() - startTime
@@ -592,33 +593,40 @@ local function getTimePlayed()
     return string.format("%02d:%02d", minutes, seconds)
 end
 
-local timeParagraph = Player:Paragraph({
-    Title = "⏱️ Time in Game",
-    Desc = "You have been playing for 00:00.",
-    Color = "Blue",
-    Image = "",
-    ImageSize = 30,
-    Thumbnail = "",
-    ThumbnailSize = 80,
-    Locked = false,
-    Buttons = {
-        {
-            Icon = "clock",
-            Title = "Reset Timer",
-            Callback = function()
-                startTime = tick()
-            end,
-        }
-    }
-})
+-- Function to recreate the paragraph with updated time
+local function updateTimeParagraph()
+    if timeParagraph then
+        timeParagraph:Remove()
+    end
 
-task.delay(0.1, function()
-    task.spawn(function()
-        while true do
-            timeParagraph:SetDesc("You have been playing for " .. getTimePlayed() .. ".")
-            task.wait(1)
-        end
-    end)
+    timeParagraph = Player:Paragraph({
+        Title = "⏱️ Time in Game",
+        Desc = "You have been playing for " .. getTimePlayed() .. ".",
+        Color = "Blue",
+        Image = "",
+        ImageSize = 30,
+        Thumbnail = "",
+        ThumbnailSize = 80,
+        Locked = false,
+        Buttons = {
+            {
+                Icon = "clock",
+                Title = "Reset Timer",
+                Callback = function()
+                    startTime = tick()
+                    print("Timer reset!")
+                end,
+            }
+        }
+    })
+end
+
+-- Loop that refreshes the paragraph every second
+task.spawn(function()
+    while true do
+        updateTimeParagraph()
+        task.wait(1)
+    end
 end)
 
 local Players = game:GetService("Players")
