@@ -583,6 +583,33 @@ local teleporttoplayerButton = Main:Button({
     end
 })
 
+local gamesParagraph = Games:Paragraph({
+    Title = "🎮 Games Supported",
+    Desc = [[
+- Dead Rails
+- Muscle Legends
+- Blox Fruits
+- Grow a Garden
+- Build a Tower to Heaven
+]],
+    Color = "Blue", -- bright and fresh color for games list
+    Image = "", -- optional: add an icon image if you want
+    ImageSize = 30,
+    Thumbnail = "", -- optional thumbnail here
+    ThumbnailSize = 80,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "gamepad",
+            Title = "Join Discord",
+            Callback = function()
+                print("Redirecting to Discord...")
+                -- you can put a Discord link open function here if you want
+            end,
+        }
+    }
+})
+
 local creditsParagraph = Credits:Paragraph({
     Title = "👑 Credits to Kuzanu",
     Desc = "UI Designer and Absolute Legend behind the visuals of this hub. Salute to the GOAT. 🐐 Also for making this script possible!",
