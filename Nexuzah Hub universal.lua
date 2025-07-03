@@ -576,7 +576,75 @@ local teleporttoplayerButton = Main:Button({
             print("No player selected!")
         end
     end
-})                
+})
+
+local Section = Utilities:Section({ 
+    Title = "🧰 Utility Tools",
+    TextXAlignment = "Left",
+    TextSize = 17,
+})
+
+local Rejoin = Utilities:Button({
+    Title = "Rejoin Server",
+    Desc = "Reconnects you to the same server.",
+    Locked = false,
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    end,
+})
+
+local ServerHop = Utilities:Button({
+    Title = "Server Hop",
+    Desc = "Joins a different public server.",
+    Locked = false,
+    Callback = function()
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
+        for _, server in ipairs(Servers.data) do
+            if server.playing < server.maxPlayers then
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, game.Players.LocalPlayer)
+                break
+            end
+        end
+    end,
+})
+
+local FPSUnlocker = Utilities:Button({
+    Title = "Unlock FPS (Uncapped)",
+    Desc = "Attempts to remove FPS limit (executor-dependent).",
+    Locked = false,
+    Callback = function()
+        if setfpscap then
+            setfpscap(999)
+        else
+            warn("FPS unlocker not supported on this executor.")
+        end
+    end,
+})
+
+local ResetCharacter = Utilities:Button({
+    Title = "Reset Character",
+    Desc = "Resets your avatar instantly.",
+    Locked = false,
+    Callback = function()
+        game.Players.LocalPlayer.Character:BreakJoints()
+    end,
+})
+
+local ClearLag = Utilities:Button({
+    Title = "Clear Lag",
+    Desc = "Removes debris, tools, and unused objects.",
+    Locked = false,
+    Callback = function()
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("Tool") or v:IsA("Part") and v.Name == "Debris" then
+                v:Destroy()
+            end
+        end
+        print("Lag cleared.")
+    end,
+})
 
 local gamesParagraph = Games:Paragraph({
     Title = "🎮 Games Supported",
