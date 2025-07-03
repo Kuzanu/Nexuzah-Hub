@@ -83,7 +83,7 @@ local Main = Window:Tab({
 })
 local Utilities = Window:Tab({
     Title = "Utilities",
-    Icon = "brush-cleaning",
+    Icon = "antenna",
     Locked = false,
 })
 local Games = Window:Tab({
